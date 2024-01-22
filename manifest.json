@@ -2,9 +2,16 @@
   "manifest_version": 3,
   "name": "Social Mind",
   "description": "Use social media mindfully",
-  "version": "1.0",
+  "version": "0.1.0",
   "action": {
     "default_popup": "hello.html",
     "default_icon": "logo.png"
+  },
+  "icons": {
+    "16": "logo.png",
+    "32": "logo.png",
+    "48": "logo.png",
+    "128": "logo.png"
   }
+
 }
