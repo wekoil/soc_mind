@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
-  "name": "Hello world",
-  "description": "Base Level Extension",
+  "name": "Social Mind",
+  "description": "Use social media mindfully",
   "version": "1.0",
   "action": {
     "default_popup": "hello.html",
