@@ -12,6 +12,15 @@
     "32": "logo.png",
     "48": "logo.png",
     "128": "logo.png"
-  }
+  },
+  "content_scripts": [
+    {
+      "js": ["scripts/content.js"],
+      "matches": [
+        "https://www.facebook.com/",
+        "https://www.instagram.com/"
+      ]
+    }
+  ]
 
 }
