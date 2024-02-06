@@ -1,26 +1,32 @@
 {
   "manifest_version": 3,
-  "name": "Social Mind",
-  "description": "Use social media mindfully",
-  "version": "0.1.0",
+  "name": "Time Tracker",
+  "version": "1.0",
+  "description": "Track time spent on social media sites",
+
+  "permissions": ["storage", "activeTab", "tabs", "scripting"],
+
+  "host_permissions": ["https://*/*"],
+
   "action": {
-    "default_popup": "hello.html",
+    "default_popup": "popup.html",
     "default_icon": "logo.png"
   },
+
   "icons": {
     "16": "logo.png",
-    "32": "logo.png",
     "48": "logo.png",
     "128": "logo.png"
   },
+
   "content_scripts": [
     {
-      "js": ["scripts/content.js"],
-      "matches": [
-        "https://www.facebook.com/",
-        "https://www.instagram.com/"
-      ]
+      "matches": ["*://*.facebook.com/*", "*://*.instagram.com/*"],
+      "js": ["content.js"]
     }
-  ]
+  ],
 
+  "background": {
+    "service_worker": "background.js"
+  }
 }
