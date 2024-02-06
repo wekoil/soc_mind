@@ -1,25 +1,45 @@
 chrome.runtime.onMessage.addListener(function (message, sender, sendResponse) {
-  const { timeLimit, reason } = message;
+  const { timeLimit } = message;
 
-  if (timeLimit && reason) {
-    chrome.storage.local.set({ timeLimit, reason });
+  if (timeLimit) {
+    chrome.storage.local.set({ "timeLimit": timeLimit });
   }
 });
 
 chrome.tabs.onUpdated.addListener(function (tabId, changeInfo, tab) {
-  const socialMediaHosts = ['www.facebook.com', 'www.instagram.com'];
+  // get chrome tab url
   chrome.tabs.query({active: true, lastFocusedWindow: true}, tabs => {
     let url = tabs[0].url;
     // use `url` here inside the callback because it's asynchronous!
-    if (changeInfo.status === 'complete' && url && socialMediaHosts.some(host => url.includes(host))) {
+
+    if (urlMatches(url) && !isTimeOn())
+    {
       chrome.scripting.executeScript({
         target: { tabId },
         function: showInitialPrompt,
       });
     }
   });
-  
 });
+
+function isTimeOn()
+{
+  chrome.storage.local.get("timeLimit", function(items){
+    var limit = items["timeLimit"];
+    if (limit == null || limit == 0)
+    {
+      return false;
+    }
+    return true;
+});
+  
+}
+
+function urlMatches(url)
+{
+  const socialMediaHosts = ['www.facebook.com', 'www.instagram.com'];
+  return (url && socialMediaHosts.some(host => url.includes(host)));
+}
 
 function showInitialPrompt() {
   const userInput = prompt("You are entering a social media site. Set a time limit (minutes) and enter a reason:", "");
