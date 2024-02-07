@@ -1,10 +1,26 @@
-chrome.runtime.onMessage.addListener(function (message, sender, sendResponse) {
+chrome.runtime.onMessage.addListener(function (message, tabId, sender, sendResponse) {
   const { timeLimit } = message;
+  const realTabId = tabId[0];
 
   if (timeLimit) {
-    chrome.storage.local.set({ "timeLimit": timeLimit });
+    // var limitStamp = parseInt(Date.now()) + limitStamp * 60
+    // chrome.storage.local.set({ "timeLimit": limitStamp });
+
+    if (!isNaN(timeLimit) && timeLimit > 0) {
+      setTimeout(function () {
+        chrome.scripting.executeScript({
+          target: { tabId: realTabId },
+          function: showAlert,
+        });
+      }, timeLimit * 60 * 1000);
+    }
   }
 });
+
+function showAlert(timeLimit)
+{
+  alert(`Time limit (${timeLimit} minutes) on social media has passed.`);
+}
 
 chrome.tabs.onUpdated.addListener(function (tabId, changeInfo, tab) {
   // get chrome tab url
@@ -15,6 +31,7 @@ chrome.tabs.onUpdated.addListener(function (tabId, changeInfo, tab) {
     if (urlMatches(url) && !isTimeOn())
     {
       chrome.scripting.executeScript({
+        args: [tabId],
         target: { tabId },
         function: showInitialPrompt,
       });
@@ -30,7 +47,11 @@ function isTimeOn()
     {
       return false;
     }
-    return true;
+    if (Date.now() >= limit)
+    {
+      return true;
+    }
+    return false;
 });
   
 }
@@ -41,13 +62,13 @@ function urlMatches(url)
   return (url && socialMediaHosts.some(host => url.includes(host)));
 }
 
-function showInitialPrompt() {
+function showInitialPrompt(tabId) {
   const userInput = prompt("You are entering a social media site. Set a time limit (minutes) and enter a reason:", "");
 
   if (userInput !== null) {
     const enteredTime = parseInt(userInput);
     if (!isNaN(enteredTime) && enteredTime > 0) {
-      chrome.runtime.sendMessage({ timeLimit: enteredTime, reason: userInput });
+      chrome.runtime.sendMessage({ timeLimit: enteredTime, tabId: tabId });
     } else {
       alert("Invalid time. Please set a valid time to continue tracking.");
     }
