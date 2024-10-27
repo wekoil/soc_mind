@@ -2,11 +2,10 @@
 
 Google extension used to limit time on social media - **now Facebook and Instagram only**.
 
-## Table of Contents
+![Screenshot 1](screenshots/image1.png)
 
-- [Installation](#installation)
-- [Usage](#usage)
-- [License](#license)
+![Screenshot 2](screenshots/image2.png)
+
 
 ## Installation
 
