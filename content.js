@@ -58,11 +58,47 @@ if (!document.getElementById("site-timer-overlay")) {
     });
   }
   
-  chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
+chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
     if (request.type === "time_up") {
-      alert("Your time is up! Please consider leaving the website.");
-      // Optionally, redirect or close the tab
-      // window.location.href = "about:blank";
+        const stayButton = document.createElement("button");
+        stayButton.textContent = "Stay on this site";
+        stayButton.addEventListener("click", () => {
+            // Do nothing
+        });
+
+        const leaveButton = document.createElement("button");
+        leaveButton.textContent = "Leave site";
+        leaveButton.addEventListener("click", () => {
+            window.close();
+        });
+
+        const text = document.createElement("p");
+        text.textContent = "Your time is up. Do something productive now!!!";
+
+        const popup = document.createElement("div");
+        popup.style.backgroundColor = "#fff";
+        popup.style.padding = "20px";
+        popup.style.borderRadius = "8px";
+        popup.style.textAlign = "center";
+        popup.appendChild(text);
+        popup.appendChild(stayButton);
+        popup.appendChild(leaveButton);
+
+        const overlay = document.createElement("div");
+        overlay.id = "site-timer-overlay";
+        overlay.style.position = "fixed";
+        overlay.style.top = 0;
+        overlay.style.left = 0;
+        overlay.style.width = "100%";
+        overlay.style.height = "100%";
+        overlay.style.backgroundColor = "rgba(0, 0, 0, 0.8)";
+        overlay.style.zIndex = 9999;
+        overlay.style.display = "flex";
+        overlay.style.justifyContent = "center";
+        overlay.style.alignItems = "center";
+        overlay.appendChild(popup);
+
+        document.body.appendChild(overlay);
     }
-  });
+});
   
