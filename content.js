@@ -63,7 +63,7 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
         const stayButton = document.createElement("button");
         stayButton.textContent = "Stay on this site";
         stayButton.addEventListener("click", () => {
-            // Do nothing
+            overlay.remove();
         });
 
         const leaveButton = document.createElement("button");
