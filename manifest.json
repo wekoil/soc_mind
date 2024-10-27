@@ -1,32 +1,16 @@
 {
   "manifest_version": 3,
-  "name": "Time Tracker",
+  "name": "Site Timer Extension",
   "version": "1.0",
-  "description": "Track time spent on social media sites",
-
-  "permissions": ["storage", "activeTab", "tabs", "scripting"],
-
-  "host_permissions": ["https://*/*"],
-
-  "action": {
-    "default_popup": "popup.html",
-    "default_icon": "logo.png"
-  },
-
-  "icons": {
-    "16": "logo.png",
-    "48": "logo.png",
-    "128": "logo.png"
-  },
-
-  "content_scripts": [
-    {
-      "matches": ["*://*.facebook.com/*", "*://*.instagram.com/*"],
-      "js": ["content.js"]
-    }
-  ],
-
+  "description": "Manages time spent on specified websites.",
+  "permissions": ["tabs", "storage", "alarms", "scripting"],
+  "host_permissions": ["*://*.facebook.com/*", "*://*.instagram.com/*"],
   "background": {
     "service_worker": "background.js"
+  },
+  "icons": {
+    "16": "icons/icon16.png",
+    "48": "icons/icon48.png",
+    "128": "icons/icon128.png"
   }
 }

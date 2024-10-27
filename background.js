@@ -1,77 +1,32 @@
-chrome.runtime.onMessage.addListener(function (message, tabId, sender, sendResponse) {
-  const { timeLimit } = message;
-  const realTabId = tabId[0];
+// background.js
 
-  if (timeLimit) {
-    // var limitStamp = parseInt(Date.now()) + limitStamp * 60
-    // chrome.storage.local.set({ "timeLimit": limitStamp });
-
-    if (!isNaN(timeLimit) && timeLimit > 0) {
-      setTimeout(function () {
+chrome.tabs.onUpdated.addListener(async (tabId, changeInfo, tab) => {
+  const blockedSites = ["facebook.com", "instagram.com"];
+  if (changeInfo.status === "complete" && tab.url) {
+    if (blockedSites.some(site => tab.url.includes(site))) {
+      const access = await chrome.storage.local.get(`access_${tabId}`);
+      if (!access[`access_${tabId}`]) {
         chrome.scripting.executeScript({
-          target: { tabId: realTabId },
-          function: showAlert,
+          target: { tabId: tabId },
+          files: ["content.js"]
         });
-      }, timeLimit * 60 * 1000);
+      }
     }
   }
 });
 
-function showAlert(timeLimit)
-{
-  alert(`Time limit (${timeLimit} minutes) on social media has passed.`);
-}
-
-chrome.tabs.onUpdated.addListener(function (tabId, changeInfo, tab) {
-  // get chrome tab url
-  chrome.tabs.query({active: true, lastFocusedWindow: true}, tabs => {
-    let url = tabs[0].url;
-    // use `url` here inside the callback because it's asynchronous!
-
-    if (urlMatches(url) && !isTimeOn())
-    {
-      chrome.scripting.executeScript({
-        args: [tabId],
-        target: { tabId },
-        function: showInitialPrompt,
-      });
-    }
-  });
-});
-
-function isTimeOn()
-{
-  chrome.storage.local.get("timeLimit", function(items){
-    var limit = items["timeLimit"];
-    if (limit == null || limit == 0)
-    {
-      return false;
-    }
-    if (Date.now() >= limit)
-    {
-      return true;
-    }
-    return false;
-});
-  
-}
-
-function urlMatches(url)
-{
-  const socialMediaHosts = ['www.facebook.com', 'www.instagram.com'];
-  return (url && socialMediaHosts.some(host => url.includes(host)));
-}
-
-function showInitialPrompt(tabId) {
-  const userInput = prompt("You are entering a social media site. Set a time limit (minutes) and enter a reason:", "");
-
-  if (userInput !== null) {
-    const enteredTime = parseInt(userInput);
-    if (!isNaN(enteredTime) && enteredTime > 0) {
-      chrome.runtime.sendMessage({ timeLimit: enteredTime, tabId: tabId });
-    } else {
-      alert("Invalid time. Please set a valid time to continue tracking.");
-    }
+chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
+  if (request.type === "start_timer") {
+    const { duration, reason } = request;
+    const tabId = sender.tab.id;
+    chrome.alarms.create(`alarm_${tabId}`, { delayInMinutes: duration });
+    chrome.storage.local.set({ [`access_${tabId}`]: true });
+    sendResponse({ success: true });
   }
-}
+});
 
+chrome.alarms.onAlarm.addListener(alarm => {
+  const tabId = parseInt(alarm.name.replace("alarm_", ""));
+  chrome.tabs.sendMessage(tabId, { type: "time_up" });
+  chrome.storage.local.remove(`access_${tabId}`);
+});
