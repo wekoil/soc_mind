@@ -2,8 +2,10 @@
 
 Google extension used to limit time on social media - **now Facebook and Instagram only**.
 
+First prompt.
 ![Screenshot 1](screenshots/prompt.png)
 
+After time is up.
 ![Screenshot 2](screenshots/ending.png)
 
 
