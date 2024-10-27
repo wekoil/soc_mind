@@ -1,6 +1,6 @@
 {
   "manifest_version": 3,
-  "name": "Site Timer Extension",
+  "name": "Social mind",
   "version": "1.0",
   "description": "Manages time spent on specified websites.",
   "permissions": ["tabs", "storage", "alarms", "scripting"],

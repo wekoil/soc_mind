@@ -1,6 +1,6 @@
-# Project Name
+# Social mind
 
-Google extension used to limit time on social media - Facebook and Instagram.
+Google extension used to limit time on social media - **now Facebook and Instagram only**.
 
 ## Table of Contents
 
