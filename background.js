@@ -1,7 +1,7 @@
 // background.js
 
 chrome.tabs.onUpdated.addListener(async (tabId, changeInfo, tab) => {
-  const blockedSites = ["facebook.com", "instagram.com"];
+  const blockedSites = ["facebook.com", "instagram.com", "reddit.com", "youtube.com"];
   if (changeInfo.status === "complete" && tab.url) {
     if (blockedSites.some(site => tab.url.includes(site))) {
       const access = await chrome.storage.local.get(`access_${tabId}`);

@@ -4,7 +4,7 @@
   "version": "1.0",
   "description": "Manages time spent on specified websites.",
   "permissions": ["tabs", "storage", "alarms", "scripting"],
-  "host_permissions": ["*://*.facebook.com/*", "*://*.instagram.com/*"],
+  "host_permissions": ["*://*.facebook.com/*", "*://*.instagram.com/*", "*://*.youtube.com/*", "*://*.reddit.com/*"],
   "background": {
     "service_worker": "background.js"
   },
